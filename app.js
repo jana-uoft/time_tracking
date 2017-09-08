@@ -1,9 +1,9 @@
 import express from 'express';
-import logger from 'morgan';
+import morgan from 'morgan';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
-import users from './routes/users';
 import helmet from 'helmet';
+import userRoutes from './routes/userRoutes';
 
 
 const app = express();
@@ -18,12 +18,12 @@ mongoose.Promise = global.Promise;
 
 // Middlewares
 app.use(helmet());
-app.use(logger('dev'));
+app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 
 // Routes
-app.use('/users', users);
+app.use('/auth', userRoutes);
 
 
 // Catch 404 Errors
@@ -47,7 +47,7 @@ app.use((err, req, res, next) => {
 
 
 // Start the server
-const port = app.get('port') || 3000;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });

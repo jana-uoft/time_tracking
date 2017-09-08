@@ -22,7 +22,7 @@ module.exports = {
     return (req, res, next) => {
       const result = Joi.validate(req.body, schema)
       if (result.error) {
-        return res.status(422).json(result.error);
+        return res.status(422).json({error: result.error.details[0].message});
       } else {
         if (!req.value)
           req.value = {};
@@ -35,20 +35,24 @@ module.exports = {
   },
 
   schemas: {
-    userSchema: Joi.object().keys({
-      firstName: Joi.string().required(),
-      lastName: Joi.string().required(),
-      email: Joi.string().email().required()
-    }),
-
-    userSchemaOptional: Joi.object().keys({
-      firstName: Joi.string(),
-      lastName: Joi.string(),
-      email: Joi.string().email()
-    }),
-
     idSchema: Joi.object().keys({
       param: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
+    }),
+
+    userRegisterSchema: Joi.object().keys({
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+      passwordConfirmation: Joi.string().required()
+    }),
+
+    userLoginSchema: Joi.object().keys({
+      email: Joi.string().email().required(),
+      password: Joi.string().required()
+    }),
+
+    userDeleteSchema: Joi.object().keys({
+      param: Joi.string().email().required()
     })
+
   }
 }
